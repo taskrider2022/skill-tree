@@ -1,0 +1,1820 @@
+<!doctype html>
+<html lang="de">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Skill Tree - Robert John</title>
+    <style>
+      @import url("https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap");
+
+      * {
+        margin: 0;
+        padding: 0;
+        box-sizing: border-box;
+      }
+
+      :root {
+        --bg: #0a0a0f;
+        --bg-card: #12121a;
+        --bg-card-hover: #1a1a26;
+        --border: #1e1e2e;
+        --text: #e0e0e8;
+        --text-muted: #8888a0;
+        --accent-blue: #4d8eff;
+        --accent-cyan: #00d4ff;
+        --accent-purple: #a855f7;
+        --accent-green: #22c55e;
+        --accent-orange: #f59e0b;
+        --accent-pink: #ec4899;
+        --accent-red: #ef4444;
+        --accent-teal: #14b8a6;
+        --glow-blue: rgba(77, 142, 255, 0.15);
+        --glow-cyan: rgba(0, 212, 255, 0.15);
+        --glow-purple: rgba(168, 85, 247, 0.15);
+        --glow-green: rgba(34, 197, 94, 0.15);
+      }
+
+      body {
+        font-family:
+          "Inter",
+          -apple-system,
+          sans-serif;
+        background: var(--bg);
+        color: var(--text);
+        min-height: 100vh;
+        overflow-x: hidden;
+      }
+
+      /* Animated background */
+      body::before {
+        content: "";
+        position: fixed;
+        top: 0;
+        left: 0;
+        right: 0;
+        bottom: 0;
+        background:
+          radial-gradient(
+            ellipse 80% 50% at 50% -20%,
+            rgba(77, 142, 255, 0.08),
+            transparent
+          ),
+          radial-gradient(
+            ellipse 60% 40% at 80% 80%,
+            rgba(168, 85, 247, 0.06),
+            transparent
+          ),
+          radial-gradient(
+            ellipse 60% 40% at 10% 60%,
+            rgba(0, 212, 255, 0.05),
+            transparent
+          );
+        pointer-events: none;
+        z-index: 0;
+      }
+
+      .container {
+        max-width: 1400px;
+        margin: 0 auto;
+        padding: 40px 24px;
+        position: relative;
+        z-index: 1;
+      }
+
+      /* Header */
+      .header {
+        text-align: center;
+        margin-bottom: 48px;
+      }
+
+      .header h1 {
+        font-size: 42px;
+        font-weight: 800;
+        background: linear-gradient(
+          135deg,
+          var(--accent-blue),
+          var(--accent-cyan),
+          var(--accent-purple)
+        );
+        -webkit-background-clip: text;
+        -webkit-text-fill-color: transparent;
+        background-clip: text;
+        margin-bottom: 8px;
+        letter-spacing: -1px;
+      }
+
+      .header .subtitle {
+        font-size: 16px;
+        color: var(--text-muted);
+        font-weight: 400;
+      }
+
+      .header .role {
+        display: inline-block;
+        margin-top: 16px;
+        padding: 8px 20px;
+        background: linear-gradient(
+          135deg,
+          rgba(77, 142, 255, 0.12),
+          rgba(168, 85, 247, 0.12)
+        );
+        border: 1px solid rgba(77, 142, 255, 0.2);
+        border-radius: 100px;
+        font-size: 14px;
+        font-weight: 500;
+        color: var(--accent-cyan);
+      }
+
+      /* Stats bar */
+      .stats-bar {
+        display: flex;
+        justify-content: center;
+        gap: 32px;
+        margin-bottom: 48px;
+        flex-wrap: wrap;
+      }
+
+      .stat {
+        text-align: center;
+      }
+
+      .stat-value {
+        font-size: 32px;
+        font-weight: 800;
+        background: linear-gradient(
+          135deg,
+          var(--accent-blue),
+          var(--accent-cyan)
+        );
+        -webkit-background-clip: text;
+        -webkit-text-fill-color: transparent;
+        background-clip: text;
+      }
+
+      .stat-label {
+        font-size: 12px;
+        color: var(--text-muted);
+        text-transform: uppercase;
+        letter-spacing: 1px;
+        margin-top: 2px;
+      }
+
+      /* Filter tabs */
+      .filters {
+        display: flex;
+        justify-content: center;
+        gap: 8px;
+        margin-bottom: 40px;
+        flex-wrap: wrap;
+      }
+
+      .filter-btn {
+        padding: 8px 18px;
+        border-radius: 100px;
+        border: 1px solid var(--border);
+        background: var(--bg-card);
+        color: var(--text-muted);
+        font-size: 13px;
+        font-weight: 500;
+        cursor: pointer;
+        transition: all 0.25s ease;
+        font-family: inherit;
+      }
+
+      .filter-btn:hover {
+        border-color: var(--accent-blue);
+        color: var(--text);
+      }
+
+      .filter-btn.active {
+        background: linear-gradient(
+          135deg,
+          rgba(77, 142, 255, 0.15),
+          rgba(168, 85, 247, 0.15)
+        );
+        border-color: var(--accent-blue);
+        color: #fff;
+      }
+
+      /* Skill categories */
+      .categories {
+        display: grid;
+        gap: 32px;
+      }
+
+      .category {
+        background: var(--bg-card);
+        border: 1px solid var(--border);
+        border-radius: 20px;
+        padding: 32px;
+        transition: all 0.3s ease;
+      }
+
+      .category:hover {
+        border-color: rgba(77, 142, 255, 0.3);
+      }
+
+      .category-header {
+        display: flex;
+        align-items: center;
+        gap: 14px;
+        margin-bottom: 24px;
+      }
+
+      .category-icon {
+        width: 48px;
+        height: 48px;
+        border-radius: 14px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-size: 22px;
+        flex-shrink: 0;
+      }
+
+      .category-title {
+        font-size: 20px;
+        font-weight: 700;
+        letter-spacing: -0.3px;
+      }
+
+      .category-count {
+        font-size: 12px;
+        color: var(--text-muted);
+        margin-top: 2px;
+      }
+
+      /* Skill grid */
+      .skills-grid {
+        display: grid;
+        grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+        gap: 12px;
+      }
+
+      /* Skill card */
+      .skill-card {
+        background: rgba(255, 255, 255, 0.02);
+        border: 1px solid rgba(255, 255, 255, 0.04);
+        border-radius: 14px;
+        padding: 18px 20px;
+        transition: all 0.25s ease;
+        cursor: default;
+        position: relative;
+        overflow: hidden;
+      }
+
+      .skill-card:hover {
+        background: var(--bg-card-hover);
+        border-color: rgba(255, 255, 255, 0.08);
+        transform: translateY(-2px);
+      }
+
+      .skill-name {
+        font-size: 15px;
+        font-weight: 600;
+        margin-bottom: 8px;
+        display: flex;
+        align-items: center;
+        gap: 8px;
+      }
+
+      .skill-level-badge {
+        font-size: 10px;
+        padding: 2px 8px;
+        border-radius: 100px;
+        font-weight: 600;
+        text-transform: uppercase;
+        letter-spacing: 0.5px;
+        flex-shrink: 0;
+      }
+
+      .level-expert .skill-level-badge {
+        background: rgba(34, 197, 94, 0.15);
+        color: var(--accent-green);
+      }
+
+      .level-advanced .skill-level-badge {
+        background: rgba(77, 142, 255, 0.15);
+        color: var(--accent-blue);
+      }
+
+      .level-intermediate .skill-level-badge {
+        background: rgba(245, 158, 11, 0.15);
+        color: var(--accent-orange);
+      }
+
+      .level-basic .skill-level-badge {
+        background: rgba(136, 136, 160, 0.15);
+        color: var(--text-muted);
+      }
+
+      /* Progress bar */
+      .skill-bar-track {
+        height: 4px;
+        background: rgba(255, 255, 255, 0.06);
+        border-radius: 4px;
+        margin-bottom: 10px;
+        overflow: hidden;
+      }
+
+      .skill-bar-fill {
+        height: 100%;
+        border-radius: 4px;
+        transition: width 1s cubic-bezier(0.22, 1, 0.36, 1);
+        width: 0;
+      }
+
+      .level-expert .skill-bar-fill {
+        background: linear-gradient(
+          90deg,
+          var(--accent-green),
+          var(--accent-teal)
+        );
+        box-shadow: 0 0 12px rgba(34, 197, 94, 0.4);
+      }
+
+      .level-advanced .skill-bar-fill {
+        background: linear-gradient(
+          90deg,
+          var(--accent-blue),
+          var(--accent-cyan)
+        );
+        box-shadow: 0 0 12px rgba(77, 142, 255, 0.4);
+      }
+
+      .level-intermediate .skill-bar-fill {
+        background: linear-gradient(90deg, var(--accent-orange), #fbbf24);
+        box-shadow: 0 0 12px rgba(245, 158, 11, 0.3);
+      }
+
+      .level-basic .skill-bar-fill {
+        background: linear-gradient(90deg, #666, #888);
+      }
+
+      .skill-meta {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+      }
+
+      .skill-projects {
+        font-size: 12px;
+        color: var(--text-muted);
+      }
+
+      .skill-years {
+        font-size: 11px;
+        color: var(--text-muted);
+        opacity: 0.7;
+      }
+
+      /* Project domains section */
+      .domains {
+        display: grid;
+        grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+        gap: 12px;
+        margin-top: 48px;
+      }
+
+      .domain-card {
+        background: var(--bg-card);
+        border: 1px solid var(--border);
+        border-radius: 14px;
+        padding: 20px;
+        text-align: center;
+        transition: all 0.25s ease;
+      }
+
+      .domain-card:hover {
+        border-color: rgba(77, 142, 255, 0.3);
+        transform: translateY(-2px);
+      }
+
+      .domain-icon {
+        font-size: 28px;
+        margin-bottom: 10px;
+      }
+
+      .domain-name {
+        font-size: 14px;
+        font-weight: 600;
+        margin-bottom: 4px;
+      }
+
+      .domain-count {
+        font-size: 12px;
+        color: var(--text-muted);
+      }
+
+      /* Section titles */
+      .section-title {
+        font-size: 24px;
+        font-weight: 700;
+        margin-bottom: 24px;
+        margin-top: 56px;
+        letter-spacing: -0.5px;
+      }
+
+      .section-title span {
+        color: var(--text-muted);
+        font-weight: 400;
+        font-size: 16px;
+        margin-left: 8px;
+      }
+
+      /* Legend */
+      .legend {
+        display: flex;
+        justify-content: center;
+        gap: 24px;
+        margin-bottom: 40px;
+        flex-wrap: wrap;
+      }
+
+      .legend-item {
+        display: flex;
+        align-items: center;
+        gap: 8px;
+        font-size: 13px;
+        color: var(--text-muted);
+      }
+
+      .legend-dot {
+        width: 10px;
+        height: 10px;
+        border-radius: 50%;
+      }
+
+      .legend-dot.expert {
+        background: var(--accent-green);
+        box-shadow: 0 0 8px rgba(34, 197, 94, 0.4);
+      }
+      .legend-dot.advanced {
+        background: var(--accent-blue);
+        box-shadow: 0 0 8px rgba(77, 142, 255, 0.4);
+      }
+      .legend-dot.intermediate {
+        background: var(--accent-orange);
+        box-shadow: 0 0 8px rgba(245, 158, 11, 0.3);
+      }
+      .legend-dot.basic {
+        background: #666;
+      }
+
+      /* Animations */
+      .category {
+        animation: fadeUp 0.6s ease forwards;
+        opacity: 0;
+      }
+      .category:nth-child(1) {
+        animation-delay: 0.05s;
+      }
+      .category:nth-child(2) {
+        animation-delay: 0.1s;
+      }
+      .category:nth-child(3) {
+        animation-delay: 0.15s;
+      }
+      .category:nth-child(4) {
+        animation-delay: 0.2s;
+      }
+      .category:nth-child(5) {
+        animation-delay: 0.25s;
+      }
+      .category:nth-child(6) {
+        animation-delay: 0.3s;
+      }
+      .category:nth-child(7) {
+        animation-delay: 0.35s;
+      }
+      .category:nth-child(8) {
+        animation-delay: 0.4s;
+      }
+
+      @keyframes fadeUp {
+        from {
+          opacity: 0;
+          transform: translateY(20px);
+        }
+        to {
+          opacity: 1;
+          transform: translateY(0);
+        }
+      }
+
+      /* Hidden class for filtering */
+      .hidden {
+        display: none !important;
+      }
+
+      /* Responsive */
+      @media (max-width: 768px) {
+        .header h1 {
+          font-size: 28px;
+        }
+        .stats-bar {
+          gap: 20px;
+        }
+        .stat-value {
+          font-size: 24px;
+        }
+        .category {
+          padding: 20px;
+        }
+        .skills-grid {
+          grid-template-columns: 1fr;
+        }
+      }
+
+      /* Tooltip */
+      .skill-card[data-tooltip]:hover::after {
+        content: attr(data-tooltip);
+        position: absolute;
+        bottom: calc(100% + 8px);
+        left: 50%;
+        transform: translateX(-50%);
+        background: #1e1e2e;
+        border: 1px solid rgba(255, 255, 255, 0.1);
+        color: var(--text);
+        font-size: 12px;
+        padding: 8px 12px;
+        border-radius: 8px;
+        white-space: nowrap;
+        z-index: 10;
+        pointer-events: none;
+        box-shadow: 0 8px 32px rgba(0, 0, 0, 0.4);
+      }
+
+      /* Print */
+      @media print {
+        body {
+          background: #fff;
+          color: #111;
+        }
+        body::before {
+          display: none;
+        }
+        .filters {
+          display: none;
+        }
+        .category {
+          border-color: #ddd;
+          break-inside: avoid;
+        }
+        .skill-card {
+          border-color: #eee;
+        }
+      }
+    </style>
+  </head>
+  <body>
+    <div class="container">
+      <!-- Header -->
+      <div class="header">
+        <h1>Skill Tree - Robert John</h1>
+        <p class="subtitle">Basierend auf der Analyse von 55+ Projekten</p>
+        <div class="role">
+          Full-Stack Developer &mdash; Next.js + Drupal Headless Architecture
+        </div>
+      </div>
+
+      <!-- Stats -->
+      <div class="stats-bar">
+        <div class="stat">
+          <div class="stat-value">55+</div>
+          <div class="stat-label">Projekte</div>
+        </div>
+        <div class="stat">
+          <div class="stat-value">8</div>
+          <div class="stat-label">Kategorien</div>
+        </div>
+        <div class="stat">
+          <div class="stat-value">50+</div>
+          <div class="stat-label">Technologien</div>
+        </div>
+        <div class="stat">
+          <div class="stat-value">4+</div>
+          <div class="stat-label">Jahre Drupal+Next.js</div>
+        </div>
+      </div>
+
+      <!-- Legend -->
+      <div class="legend">
+        <div class="legend-item">
+          <div class="legend-dot expert"></div>
+          Expert (10+ Projekte)
+        </div>
+        <div class="legend-item">
+          <div class="legend-dot advanced"></div>
+          Advanced (5-10 Projekte)
+        </div>
+        <div class="legend-item">
+          <div class="legend-dot intermediate"></div>
+          Intermediate (2-5 Projekte)
+        </div>
+        <div class="legend-item">
+          <div class="legend-dot basic"></div>
+          Basic (1 Projekt)
+        </div>
+      </div>
+
+      <!-- Filters -->
+      <div class="filters">
+        <button class="filter-btn active" data-filter="all">Alle</button>
+        <button class="filter-btn" data-filter="frontend">Frontend</button>
+        <button class="filter-btn" data-filter="backend">Backend</button>
+        <button class="filter-btn" data-filter="devops">DevOps</button>
+        <button class="filter-btn" data-filter="testing">Testing</button>
+        <button class="filter-btn" data-filter="design">Design Systems</button>
+        <button class="filter-btn" data-filter="specialization">
+          Spezialisierungen
+        </button>
+      </div>
+
+      <!-- Categories -->
+      <div class="categories" id="categories">
+        <!-- 1. Frontend Frameworks & Libraries -->
+        <div class="category" data-tags="frontend">
+          <div class="category-header">
+            <div
+              class="category-icon"
+              style="
+                background: linear-gradient(
+                  135deg,
+                  var(--glow-blue),
+                  var(--glow-cyan)
+                );
+                color: var(--accent-cyan);
+              "
+            >
+              <svg
+                width="24"
+                height="24"
+                viewBox="0 0 24 24"
+                fill="none"
+                stroke="currentColor"
+                stroke-width="2"
+              >
+                <path d="M12 2L2 7l10 5 10-5-10-5z" />
+                <path d="M2 17l10 5 10-5" />
+                <path d="M2 12l10 5 10-5" />
+              </svg>
+            </div>
+            <div>
+              <div class="category-title">Frontend Frameworks</div>
+              <div class="category-count">
+                Core-Stack &mdash; React, Next.js, TypeScript
+              </div>
+            </div>
+          </div>
+          <div class="skills-grid">
+            <div
+              class="skill-card level-expert"
+              data-tooltip="Next.js 13-16, App & Pages Router, ISR, SSG, SSR"
+            >
+              <div class="skill-name">
+                Next.js <span class="skill-level-badge">Expert</span>
+              </div>
+              <div class="skill-bar-track">
+                <div class="skill-bar-fill" data-width="95"></div>
+              </div>
+              <div class="skill-meta">
+                <span class="skill-projects">19 Projekte</span
+                ><span class="skill-years">v13 &ndash; v16</span>
+              </div>
+            </div>
+            <div class="skill-card level-expert">
+              <div class="skill-name">
+                React <span class="skill-level-badge">Expert</span>
+              </div>
+              <div class="skill-bar-track">
+                <div class="skill-bar-fill" data-width="95"></div>
+              </div>
+              <div class="skill-meta">
+                <span class="skill-projects">19 Projekte</span
+                ><span class="skill-years">v18 &ndash; v19</span>
+              </div>
+            </div>
+            <div class="skill-card level-expert">
+              <div class="skill-name">
+                TypeScript <span class="skill-level-badge">Expert</span>
+              </div>
+              <div class="skill-bar-track">
+                <div class="skill-bar-fill" data-width="92"></div>
+              </div>
+              <div class="skill-meta">
+                <span class="skill-projects">16+ Projekte</span
+                ><span class="skill-years">Strict Mode</span>
+              </div>
+            </div>
+            <div
+              class="skill-card level-expert"
+              data-tooltip="Tailwind CSS 3-4, Custom Theming, Plugins, PostCSS"
+            >
+              <div class="skill-name">
+                Tailwind CSS <span class="skill-level-badge">Expert</span>
+              </div>
+              <div class="skill-bar-track">
+                <div class="skill-bar-fill" data-width="92"></div>
+              </div>
+              <div class="skill-meta">
+                <span class="skill-projects">14+ Projekte</span
+                ><span class="skill-years">v3 &ndash; v4</span>
+              </div>
+            </div>
+            <div class="skill-card level-expert">
+              <div class="skill-name">
+                Zustand <span class="skill-level-badge">Expert</span>
+              </div>
+              <div class="skill-bar-track">
+                <div class="skill-bar-fill" data-width="88"></div>
+              </div>
+              <div class="skill-meta">
+                <span class="skill-projects">8+ Projekte</span
+                ><span class="skill-years">State Mgmt</span>
+              </div>
+            </div>
+            <div class="skill-card level-expert">
+              <div class="skill-name">
+                TanStack Query <span class="skill-level-badge">Expert</span>
+              </div>
+              <div class="skill-bar-track">
+                <div class="skill-bar-fill" data-width="88"></div>
+              </div>
+              <div class="skill-meta">
+                <span class="skill-projects">8+ Projekte</span
+                ><span class="skill-years">Data Fetching</span>
+              </div>
+            </div>
+            <div class="skill-card level-advanced">
+              <div class="skill-name">
+                Radix UI <span class="skill-level-badge">Advanced</span>
+              </div>
+              <div class="skill-bar-track">
+                <div class="skill-bar-fill" data-width="72"></div>
+              </div>
+              <div class="skill-meta">
+                <span class="skill-projects">5+ Projekte</span
+                ><span class="skill-years">Headless UI</span>
+              </div>
+            </div>
+            <div class="skill-card level-advanced">
+              <div class="skill-name">
+                React Aria <span class="skill-level-badge">Advanced</span>
+              </div>
+              <div class="skill-bar-track">
+                <div class="skill-bar-fill" data-width="68"></div>
+              </div>
+              <div class="skill-meta">
+                <span class="skill-projects">3+ Projekte</span
+                ><span class="skill-years">A11y</span>
+              </div>
+            </div>
+            <div class="skill-card level-advanced">
+              <div class="skill-name">
+                react-hook-form <span class="skill-level-badge">Advanced</span>
+              </div>
+              <div class="skill-bar-track">
+                <div class="skill-bar-fill" data-width="78"></div>
+              </div>
+              <div class="skill-meta">
+                <span class="skill-projects">8+ Projekte</span
+                ><span class="skill-years">+ Zod</span>
+              </div>
+            </div>
+            <div class="skill-card level-advanced">
+              <div class="skill-name">
+                next-i18next / next-intl
+                <span class="skill-level-badge">Advanced</span>
+              </div>
+              <div class="skill-bar-track">
+                <div class="skill-bar-fill" data-width="80"></div>
+              </div>
+              <div class="skill-meta">
+                <span class="skill-projects">10+ Projekte</span
+                ><span class="skill-years">2-4 Sprachen</span>
+              </div>
+            </div>
+            <div class="skill-card level-intermediate">
+              <div class="skill-name">
+                Angular <span class="skill-level-badge">Intermediate</span>
+              </div>
+              <div class="skill-bar-track">
+                <div class="skill-bar-fill" data-width="35"></div>
+              </div>
+              <div class="skill-meta">
+                <span class="skill-projects">1 Projekt</span
+                ><span class="skill-years">v15</span>
+              </div>
+            </div>
+            <div class="skill-card level-advanced">
+              <div class="skill-name">
+                Storybook <span class="skill-level-badge">Advanced</span>
+              </div>
+              <div class="skill-bar-track">
+                <div class="skill-bar-fill" data-width="65"></div>
+              </div>
+              <div class="skill-meta">
+                <span class="skill-projects">2+ Projekte</span
+                ><span class="skill-years">Component Lib</span>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- 2. Backend & CMS -->
+        <div class="category" data-tags="backend">
+          <div class="category-header">
+            <div
+              class="category-icon"
+              style="
+                background: linear-gradient(
+                  135deg,
+                  var(--glow-purple),
+                  rgba(236, 72, 153, 0.15)
+                );
+                color: var(--accent-purple);
+              "
+            >
+              <svg
+                width="24"
+                height="24"
+                viewBox="0 0 24 24"
+                fill="none"
+                stroke="currentColor"
+                stroke-width="2"
+              >
+                <rect x="2" y="3" width="20" height="14" rx="2" />
+                <line x1="8" y1="21" x2="16" y2="21" />
+                <line x1="12" y1="17" x2="12" y2="21" />
+              </svg>
+            </div>
+            <div>
+              <div class="category-title">Backend & CMS</div>
+              <div class="category-count">Drupal, PHP, Symfony, Shopware</div>
+            </div>
+          </div>
+          <div class="skills-grid">
+            <div
+              class="skill-card level-expert"
+              data-tooltip="Drupal 8-11, Custom Modules, JSON:API, Theming"
+            >
+              <div class="skill-name">
+                Drupal <span class="skill-level-badge">Expert</span>
+              </div>
+              <div class="skill-bar-track">
+                <div class="skill-bar-fill" data-width="97"></div>
+              </div>
+              <div class="skill-meta">
+                <span class="skill-projects">45 Projekte</span
+                ><span class="skill-years">v8 &ndash; v11</span>
+              </div>
+            </div>
+            <div class="skill-card level-expert">
+              <div class="skill-name">
+                PHP <span class="skill-level-badge">Expert</span>
+              </div>
+              <div class="skill-bar-track">
+                <div class="skill-bar-fill" data-width="95"></div>
+              </div>
+              <div class="skill-meta">
+                <span class="skill-projects">45+ Projekte</span
+                ><span class="skill-years">8.0 &ndash; 8.3</span>
+              </div>
+            </div>
+            <div
+              class="skill-card level-expert"
+              data-tooltip="jsonapi_extras, decoupled_router, jsonapi_hypermedia"
+            >
+              <div class="skill-name">
+                JSON:API <span class="skill-level-badge">Expert</span>
+              </div>
+              <div class="skill-bar-track">
+                <div class="skill-bar-fill" data-width="90"></div>
+              </div>
+              <div class="skill-meta">
+                <span class="skill-projects">16+ Projekte</span
+                ><span class="skill-years">Headless</span>
+              </div>
+            </div>
+            <div class="skill-card level-expert">
+              <div class="skill-name">
+                Drupal Custom Modules
+                <span class="skill-level-badge">Expert</span>
+              </div>
+              <div class="skill-bar-track">
+                <div class="skill-bar-fill" data-width="92"></div>
+              </div>
+              <div class="skill-meta">
+                <span class="skill-projects">30+ Module</span
+                ><span class="skill-years">mm_ prefix</span>
+              </div>
+            </div>
+            <div class="skill-card level-expert">
+              <div class="skill-name">
+                Composer <span class="skill-level-badge">Expert</span>
+              </div>
+              <div class="skill-bar-track">
+                <div class="skill-bar-fill" data-width="90"></div>
+              </div>
+              <div class="skill-meta">
+                <span class="skill-projects">45+ Projekte</span
+                ><span class="skill-years">Dep Mgmt</span>
+              </div>
+            </div>
+            <div class="skill-card level-expert">
+              <div class="skill-name">
+                Twig Templating <span class="skill-level-badge">Expert</span>
+              </div>
+              <div class="skill-bar-track">
+                <div class="skill-bar-fill" data-width="88"></div>
+              </div>
+              <div class="skill-meta">
+                <span class="skill-projects">40+ Projekte</span
+                ><span class="skill-years">Theming</span>
+              </div>
+            </div>
+            <div class="skill-card level-expert">
+              <div class="skill-name">
+                Drush <span class="skill-level-badge">Expert</span>
+              </div>
+              <div class="skill-bar-track">
+                <div class="skill-bar-fill" data-width="88"></div>
+              </div>
+              <div class="skill-meta">
+                <span class="skill-projects">40+ Projekte</span
+                ><span class="skill-years">CLI</span>
+              </div>
+            </div>
+            <div class="skill-card level-advanced">
+              <div class="skill-name">
+                Elasticsearch <span class="skill-level-badge">Advanced</span>
+              </div>
+              <div class="skill-bar-track">
+                <div class="skill-bar-fill" data-width="70"></div>
+              </div>
+              <div class="skill-meta">
+                <span class="skill-projects">5+ Projekte</span
+                ><span class="skill-years">Search</span>
+              </div>
+            </div>
+            <div class="skill-card level-intermediate">
+              <div class="skill-name">
+                Symfony <span class="skill-level-badge">Intermediate</span>
+              </div>
+              <div class="skill-bar-track">
+                <div class="skill-bar-fill" data-width="45"></div>
+              </div>
+              <div class="skill-meta">
+                <span class="skill-projects">2 Projekte</span
+                ><span class="skill-years">v3 &ndash; v6</span>
+              </div>
+            </div>
+            <div class="skill-card level-intermediate">
+              <div class="skill-name">
+                API Platform <span class="skill-level-badge">Intermediate</span>
+              </div>
+              <div class="skill-bar-track">
+                <div class="skill-bar-fill" data-width="40"></div>
+              </div>
+              <div class="skill-meta">
+                <span class="skill-projects">1 Projekt</span
+                ><span class="skill-years">v3.3</span>
+              </div>
+            </div>
+            <div class="skill-card level-intermediate">
+              <div class="skill-name">
+                Shopware <span class="skill-level-badge">Intermediate</span>
+              </div>
+              <div class="skill-bar-track">
+                <div class="skill-bar-fill" data-width="35"></div>
+              </div>
+              <div class="skill-meta">
+                <span class="skill-projects">1 Projekt</span
+                ><span class="skill-years">v6</span>
+              </div>
+            </div>
+            <div class="skill-card level-advanced">
+              <div class="skill-name">
+                OAuth2 / JWT <span class="skill-level-badge">Advanced</span>
+              </div>
+              <div class="skill-bar-track">
+                <div class="skill-bar-fill" data-width="68"></div>
+              </div>
+              <div class="skill-meta">
+                <span class="skill-projects">5+ Projekte</span
+                ><span class="skill-years">Auth</span>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- 3. Headless / Decoupled Architecture -->
+        <div class="category" data-tags="frontend backend specialization">
+          <div class="category-header">
+            <div
+              class="category-icon"
+              style="
+                background: linear-gradient(
+                  135deg,
+                  var(--glow-green),
+                  rgba(20, 184, 166, 0.15)
+                );
+                color: var(--accent-green);
+              "
+            >
+              <svg
+                width="24"
+                height="24"
+                viewBox="0 0 24 24"
+                fill="none"
+                stroke="currentColor"
+                stroke-width="2"
+              >
+                <circle cx="12" cy="12" r="10" />
+                <path d="M2 12h20" />
+                <path
+                  d="M12 2a15.3 15.3 0 0 1 4 10 15.3 15.3 0 0 1-4 10 15.3 15.3 0 0 1-4-10 15.3 15.3 0 0 1 4-10z"
+                />
+              </svg>
+            </div>
+            <div>
+              <div class="category-title">Headless Architecture</div>
+              <div class="category-count">
+                Decoupled CMS &mdash; Deine Spezialisierung
+              </div>
+            </div>
+          </div>
+          <div class="skills-grid">
+            <div
+              class="skill-card level-expert"
+              data-tooltip="16+ Projekte mit Next.js Frontend + Drupal Backend"
+            >
+              <div class="skill-name">
+                Next.js + Drupal <span class="skill-level-badge">Expert</span>
+              </div>
+              <div class="skill-bar-track">
+                <div class="skill-bar-fill" data-width="97"></div>
+              </div>
+              <div class="skill-meta">
+                <span class="skill-projects">16 Projekte</span
+                ><span class="skill-years">Core Stack</span>
+              </div>
+            </div>
+            <div class="skill-card level-expert">
+              <div class="skill-name">
+                next-drupal (Library)
+                <span class="skill-level-badge">Expert</span>
+              </div>
+              <div class="skill-bar-track">
+                <div class="skill-bar-fill" data-width="92"></div>
+              </div>
+              <div class="skill-meta">
+                <span class="skill-projects">Monorepo Fork</span
+                ><span class="skill-years">Contributor</span>
+              </div>
+            </div>
+            <div class="skill-card level-expert">
+              <div class="skill-name">
+                ISR / SSG / SSR <span class="skill-level-badge">Expert</span>
+              </div>
+              <div class="skill-bar-track">
+                <div class="skill-bar-fill" data-width="90"></div>
+              </div>
+              <div class="skill-meta">
+                <span class="skill-projects">16+ Projekte</span
+                ><span class="skill-years">Rendering</span>
+              </div>
+            </div>
+            <div class="skill-card level-expert">
+              <div class="skill-name">
+                decoupled_router <span class="skill-level-badge">Expert</span>
+              </div>
+              <div class="skill-bar-track">
+                <div class="skill-bar-fill" data-width="88"></div>
+              </div>
+              <div class="skill-meta">
+                <span class="skill-projects">12+ Projekte</span
+                ><span class="skill-years">Route Mapping</span>
+              </div>
+            </div>
+            <div class="skill-card level-advanced">
+              <div class="skill-name">
+                Preview / Draft Mode
+                <span class="skill-level-badge">Advanced</span>
+              </div>
+              <div class="skill-bar-track">
+                <div class="skill-bar-fill" data-width="75"></div>
+              </div>
+              <div class="skill-meta">
+                <span class="skill-projects">8+ Projekte</span
+                ><span class="skill-years">Content Preview</span>
+              </div>
+            </div>
+            <div class="skill-card level-advanced">
+              <div class="skill-name">
+                REST API Design <span class="skill-level-badge">Advanced</span>
+              </div>
+              <div class="skill-bar-track">
+                <div class="skill-bar-fill" data-width="78"></div>
+              </div>
+              <div class="skill-meta">
+                <span class="skill-projects">10+ Projekte</span
+                ><span class="skill-years">Custom Endpoints</span>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- 4. DevOps & Infrastructure -->
+        <div class="category" data-tags="devops">
+          <div class="category-header">
+            <div
+              class="category-icon"
+              style="
+                background: linear-gradient(
+                  135deg,
+                  rgba(245, 158, 11, 0.15),
+                  rgba(239, 68, 68, 0.1)
+                );
+                color: var(--accent-orange);
+              "
+            >
+              <svg
+                width="24"
+                height="24"
+                viewBox="0 0 24 24"
+                fill="none"
+                stroke="currentColor"
+                stroke-width="2"
+              >
+                <path
+                  d="M4 15s1-1 4-1 5 2 8 2 4-1 4-1V3s-1 1-4 1-5-2-8-2-4 1-4 1z"
+                />
+                <line x1="4" y1="22" x2="4" y2="15" />
+              </svg>
+            </div>
+            <div>
+              <div class="category-title">DevOps & Infrastructure</div>
+              <div class="category-count">Docker, CI/CD, Hosting</div>
+            </div>
+          </div>
+          <div class="skills-grid">
+            <div class="skill-card level-expert">
+              <div class="skill-name">
+                Docker / Docker Compose
+                <span class="skill-level-badge">Expert</span>
+              </div>
+              <div class="skill-bar-track">
+                <div class="skill-bar-fill" data-width="90"></div>
+              </div>
+              <div class="skill-meta">
+                <span class="skill-projects">20+ Projekte</span
+                ><span class="skill-years">Container</span>
+              </div>
+            </div>
+            <div class="skill-card level-expert">
+              <div class="skill-name">
+                DDEV <span class="skill-level-badge">Expert</span>
+              </div>
+              <div class="skill-bar-track">
+                <div class="skill-bar-fill" data-width="92"></div>
+              </div>
+              <div class="skill-meta">
+                <span class="skill-projects">30+ Projekte</span
+                ><span class="skill-years">Local Dev</span>
+              </div>
+            </div>
+            <div class="skill-card level-expert">
+              <div class="skill-name">
+                Git <span class="skill-level-badge">Expert</span>
+              </div>
+              <div class="skill-bar-track">
+                <div class="skill-bar-fill" data-width="92"></div>
+              </div>
+              <div class="skill-meta">
+                <span class="skill-projects">55+ Projekte</span
+                ><span class="skill-years">VCS</span>
+              </div>
+            </div>
+            <div class="skill-card level-advanced">
+              <div class="skill-name">
+                GitLab CI <span class="skill-level-badge">Advanced</span>
+              </div>
+              <div class="skill-bar-track">
+                <div class="skill-bar-fill" data-width="75"></div>
+              </div>
+              <div class="skill-meta">
+                <span class="skill-projects">10+ Projekte</span
+                ><span class="skill-years">Pipelines</span>
+              </div>
+            </div>
+            <div class="skill-card level-advanced">
+              <div class="skill-name">
+                GitHub Actions <span class="skill-level-badge">Advanced</span>
+              </div>
+              <div class="skill-bar-track">
+                <div class="skill-bar-fill" data-width="70"></div>
+              </div>
+              <div class="skill-meta">
+                <span class="skill-projects">5+ Projekte</span
+                ><span class="skill-years">Workflows</span>
+              </div>
+            </div>
+            <div class="skill-card level-advanced">
+              <div class="skill-name">
+                PM2 <span class="skill-level-badge">Advanced</span>
+              </div>
+              <div class="skill-bar-track">
+                <div class="skill-bar-fill" data-width="68"></div>
+              </div>
+              <div class="skill-meta">
+                <span class="skill-projects">5+ Projekte</span
+                ><span class="skill-years">Process Mgmt</span>
+              </div>
+            </div>
+            <div class="skill-card level-advanced">
+              <div class="skill-name">
+                Nginx <span class="skill-level-badge">Advanced</span>
+              </div>
+              <div class="skill-bar-track">
+                <div class="skill-bar-fill" data-width="65"></div>
+              </div>
+              <div class="skill-meta">
+                <span class="skill-projects">10+ Projekte</span
+                ><span class="skill-years">Web Server</span>
+              </div>
+            </div>
+            <div class="skill-card level-intermediate">
+              <div class="skill-name">
+                Lando <span class="skill-level-badge">Intermediate</span>
+              </div>
+              <div class="skill-bar-track">
+                <div class="skill-bar-fill" data-width="45"></div>
+              </div>
+              <div class="skill-meta">
+                <span class="skill-projects">2 Projekte</span
+                ><span class="skill-years">Local Dev</span>
+              </div>
+            </div>
+            <div class="skill-card level-intermediate">
+              <div class="skill-name">
+                Hetzner VPS <span class="skill-level-badge">Intermediate</span>
+              </div>
+              <div class="skill-bar-track">
+                <div class="skill-bar-fill" data-width="45"></div>
+              </div>
+              <div class="skill-meta">
+                <span class="skill-projects">2+ Projekte</span
+                ><span class="skill-years">Hosting</span>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- 5. Testing -->
+        <div class="category" data-tags="testing">
+          <div class="category-header">
+            <div
+              class="category-icon"
+              style="
+                background: linear-gradient(
+                  135deg,
+                  rgba(34, 197, 94, 0.15),
+                  rgba(14, 184, 166, 0.1)
+                );
+                color: var(--accent-green);
+              "
+            >
+              <svg
+                width="24"
+                height="24"
+                viewBox="0 0 24 24"
+                fill="none"
+                stroke="currentColor"
+                stroke-width="2"
+              >
+                <path d="M22 11.08V12a10 10 0 1 1-5.93-9.14" />
+                <polyline points="22 4 12 14.01 9 11.01" />
+              </svg>
+            </div>
+            <div>
+              <div class="category-title">Testing & Qualitaet</div>
+              <div class="category-count">E2E, Unit, Linting</div>
+            </div>
+          </div>
+          <div class="skills-grid">
+            <div class="skill-card level-advanced">
+              <div class="skill-name">
+                Cypress <span class="skill-level-badge">Advanced</span>
+              </div>
+              <div class="skill-bar-track">
+                <div class="skill-bar-fill" data-width="75"></div>
+              </div>
+              <div class="skill-meta">
+                <span class="skill-projects">6+ Projekte</span
+                ><span class="skill-years">E2E</span>
+              </div>
+            </div>
+            <div class="skill-card level-advanced">
+              <div class="skill-name">
+                Playwright <span class="skill-level-badge">Advanced</span>
+              </div>
+              <div class="skill-bar-track">
+                <div class="skill-bar-fill" data-width="70"></div>
+              </div>
+              <div class="skill-meta">
+                <span class="skill-projects">4+ Projekte</span
+                ><span class="skill-years">E2E (Neu)</span>
+              </div>
+            </div>
+            <div class="skill-card level-advanced">
+              <div class="skill-name">
+                Vitest <span class="skill-level-badge">Advanced</span>
+              </div>
+              <div class="skill-bar-track">
+                <div class="skill-bar-fill" data-width="65"></div>
+              </div>
+              <div class="skill-meta">
+                <span class="skill-projects">3+ Projekte</span
+                ><span class="skill-years">Unit Tests</span>
+              </div>
+            </div>
+            <div class="skill-card level-advanced">
+              <div class="skill-name">
+                ESLint / Prettier
+                <span class="skill-level-badge">Advanced</span>
+              </div>
+              <div class="skill-bar-track">
+                <div class="skill-bar-fill" data-width="82"></div>
+              </div>
+              <div class="skill-meta">
+                <span class="skill-projects">20+ Projekte</span
+                ><span class="skill-years">Code Quality</span>
+              </div>
+            </div>
+            <div class="skill-card level-intermediate">
+              <div class="skill-name">
+                Jest <span class="skill-level-badge">Intermediate</span>
+              </div>
+              <div class="skill-bar-track">
+                <div class="skill-bar-fill" data-width="45"></div>
+              </div>
+              <div class="skill-meta">
+                <span class="skill-projects">2+ Projekte</span
+                ><span class="skill-years">Unit</span>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- 6. Design Systems & Styling -->
+        <div class="category" data-tags="frontend design">
+          <div class="category-header">
+            <div
+              class="category-icon"
+              style="
+                background: linear-gradient(
+                  135deg,
+                  rgba(236, 72, 153, 0.15),
+                  rgba(168, 85, 247, 0.1)
+                );
+                color: var(--accent-pink);
+              "
+            >
+              <svg
+                width="24"
+                height="24"
+                viewBox="0 0 24 24"
+                fill="none"
+                stroke="currentColor"
+                stroke-width="2"
+              >
+                <circle cx="13.5" cy="6.5" r="2.5" />
+                <path d="M17.5 15.5a2.5 2.5 0 1 0 0-5" />
+                <path d="M8.5 8.5a2.5 2.5 0 1 0 0 5" />
+                <circle cx="10.5" cy="17.5" r="2.5" />
+                <path d="M12 2v2" />
+                <path d="M12 20v2" />
+                <path d="m4.93 4.93 1.41 1.41" />
+                <path d="m17.66 17.66 1.41 1.41" />
+                <path d="M2 12h2" />
+                <path d="M20 12h2" />
+                <path d="m6.34 17.66-1.41 1.41" />
+                <path d="m19.07 4.93-1.41 1.41" />
+              </svg>
+            </div>
+            <div>
+              <div class="category-title">Design Systems & Styling</div>
+              <div class="category-count">
+                Tokens, Theming, Component Libraries
+              </div>
+            </div>
+          </div>
+          <div class="skills-grid">
+            <div class="skill-card level-expert">
+              <div class="skill-name">
+                CSS / SCSS / LESS <span class="skill-level-badge">Expert</span>
+              </div>
+              <div class="skill-bar-track">
+                <div class="skill-bar-fill" data-width="90"></div>
+              </div>
+              <div class="skill-meta">
+                <span class="skill-projects">40+ Projekte</span
+                ><span class="skill-years">Styling</span>
+              </div>
+            </div>
+            <div class="skill-card level-advanced">
+              <div class="skill-name">
+                Style Dictionary <span class="skill-level-badge">Advanced</span>
+              </div>
+              <div class="skill-bar-track">
+                <div class="skill-bar-fill" data-width="60"></div>
+              </div>
+              <div class="skill-meta">
+                <span class="skill-projects">2+ Projekte</span
+                ><span class="skill-years">Design Tokens</span>
+              </div>
+            </div>
+            <div class="skill-card level-advanced">
+              <div class="skill-name">
+                Figma Token Sync <span class="skill-level-badge">Advanced</span>
+              </div>
+              <div class="skill-bar-track">
+                <div class="skill-bar-fill" data-width="60"></div>
+              </div>
+              <div class="skill-meta">
+                <span class="skill-projects">1+ Projekte</span
+                ><span class="skill-years">Design-to-Code</span>
+              </div>
+            </div>
+            <div class="skill-card level-expert">
+              <div class="skill-name">
+                Bootstrap <span class="skill-level-badge">Expert</span>
+              </div>
+              <div class="skill-bar-track">
+                <div class="skill-bar-fill" data-width="85"></div>
+              </div>
+              <div class="skill-meta">
+                <span class="skill-projects">20+ Projekte</span
+                ><span class="skill-years">v4</span>
+              </div>
+            </div>
+            <div class="skill-card level-advanced">
+              <div class="skill-name">
+                Responsive Design
+                <span class="skill-level-badge">Advanced</span>
+              </div>
+              <div class="skill-bar-track">
+                <div class="skill-bar-fill" data-width="85"></div>
+              </div>
+              <div class="skill-meta">
+                <span class="skill-projects">40+ Projekte</span
+                ><span class="skill-years">Mobile First</span>
+              </div>
+            </div>
+            <div class="skill-card level-advanced">
+              <div class="skill-name">
+                Gulp Build <span class="skill-level-badge">Advanced</span>
+              </div>
+              <div class="skill-bar-track">
+                <div class="skill-bar-fill" data-width="65"></div>
+              </div>
+              <div class="skill-meta">
+                <span class="skill-projects">10+ Projekte</span
+                ><span class="skill-years">SCSS/LESS</span>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- 7. Internationalization & Accessibility -->
+        <div class="category" data-tags="frontend specialization">
+          <div class="category-header">
+            <div
+              class="category-icon"
+              style="
+                background: linear-gradient(
+                  135deg,
+                  rgba(0, 212, 255, 0.15),
+                  rgba(77, 142, 255, 0.1)
+                );
+                color: var(--accent-cyan);
+              "
+            >
+              <svg
+                width="24"
+                height="24"
+                viewBox="0 0 24 24"
+                fill="none"
+                stroke="currentColor"
+                stroke-width="2"
+              >
+                <path d="m5 8 6 6" />
+                <path d="m4 14 6-6 2-3" />
+                <path d="M2 5h12" />
+                <path d="M7 2h1" />
+                <path d="m22 22-5-10-5 10" />
+                <path d="M14 18h6" />
+              </svg>
+            </div>
+            <div>
+              <div class="category-title">i18n & Accessibility</div>
+              <div class="category-count">
+                Mehrsprachigkeit, WCAG, Barrierefreiheit
+              </div>
+            </div>
+          </div>
+          <div class="skills-grid">
+            <div
+              class="skill-card level-expert"
+              data-tooltip="DE, EN, ZH, JA, NL - komplexe Routing-Setups"
+            >
+              <div class="skill-name">
+                Multi-Language Sites
+                <span class="skill-level-badge">Expert</span>
+              </div>
+              <div class="skill-bar-track">
+                <div class="skill-bar-fill" data-width="90"></div>
+              </div>
+              <div class="skill-meta">
+                <span class="skill-projects">10+ Projekte</span
+                ><span class="skill-years">2-4 Sprachen</span>
+              </div>
+            </div>
+            <div class="skill-card level-advanced">
+              <div class="skill-name">
+                WCAG 2.2 / A11y <span class="skill-level-badge">Advanced</span>
+              </div>
+              <div class="skill-bar-track">
+                <div class="skill-bar-fill" data-width="68"></div>
+              </div>
+              <div class="skill-meta">
+                <span class="skill-projects">5+ Projekte</span
+                ><span class="skill-years">AA Target</span>
+              </div>
+            </div>
+            <div class="skill-card level-advanced">
+              <div class="skill-name">
+                DeepL / TMGMT <span class="skill-level-badge">Advanced</span>
+              </div>
+              <div class="skill-bar-track">
+                <div class="skill-bar-fill" data-width="65"></div>
+              </div>
+              <div class="skill-meta">
+                <span class="skill-projects">3+ Projekte</span
+                ><span class="skill-years">Auto-Translate</span>
+              </div>
+            </div>
+            <div class="skill-card level-advanced">
+              <div class="skill-name">
+                Drupal Multilingual
+                <span class="skill-level-badge">Advanced</span>
+              </div>
+              <div class="skill-bar-track">
+                <div class="skill-bar-fill" data-width="78"></div>
+              </div>
+              <div class="skill-meta">
+                <span class="skill-projects">10+ Projekte</span
+                ><span class="skill-years">config_translation</span>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- 8. Sonstiges -->
+        <div class="category" data-tags="specialization">
+          <div class="category-header">
+            <div
+              class="category-icon"
+              style="
+                background: linear-gradient(
+                  135deg,
+                  rgba(239, 68, 68, 0.12),
+                  rgba(245, 158, 11, 0.12)
+                );
+                color: var(--accent-red);
+              "
+            >
+              <svg
+                width="24"
+                height="24"
+                viewBox="0 0 24 24"
+                fill="none"
+                stroke="currentColor"
+                stroke-width="2"
+              >
+                <polygon
+                  points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"
+                />
+              </svg>
+            </div>
+            <div>
+              <div class="category-title">Spezialisierungen & Sonstiges</div>
+              <div class="category-count">
+                Branchenwissen, Tools, andere Sprachen
+              </div>
+            </div>
+          </div>
+          <div class="skills-grid">
+            <div
+              class="skill-card level-expert"
+              data-tooltip="8 Tourismus-Projekte: Usedom, Meerfischland, Baltic, etc."
+            >
+              <div class="skill-name">
+                Tourismus-Websites <span class="skill-level-badge">Expert</span>
+              </div>
+              <div class="skill-bar-track">
+                <div class="skill-bar-fill" data-width="88"></div>
+              </div>
+              <div class="skill-meta">
+                <span class="skill-projects">8 Projekte</span
+                ><span class="skill-years">Branche</span>
+              </div>
+            </div>
+            <div class="skill-card level-expert">
+              <div class="skill-name">
+                B2B Corporate Sites
+                <span class="skill-level-badge">Expert</span>
+              </div>
+              <div class="skill-bar-track">
+                <div class="skill-bar-fill" data-width="90"></div>
+              </div>
+              <div class="skill-meta">
+                <span class="skill-projects">12 Projekte</span
+                ><span class="skill-years">Branche</span>
+              </div>
+            </div>
+            <div class="skill-card level-advanced">
+              <div class="skill-name">
+                API-Integrationen
+                <span class="skill-level-badge">Advanced</span>
+              </div>
+              <div class="skill-bar-track">
+                <div class="skill-bar-fill" data-width="75"></div>
+              </div>
+              <div class="skill-meta">
+                <span class="skill-projects">vOffice, AdmiralCloud, DeepL</span>
+              </div>
+            </div>
+            <div class="skill-card level-advanced">
+              <div class="skill-name">
+                Mapping / Geo <span class="skill-level-badge">Advanced</span>
+              </div>
+              <div class="skill-bar-track">
+                <div class="skill-bar-fill" data-width="60"></div>
+              </div>
+              <div class="skill-meta">
+                <span class="skill-projects">3+ Projekte</span
+                ><span class="skill-years">Maps, Cluster</span>
+              </div>
+            </div>
+            <div class="skill-card level-advanced">
+              <div class="skill-name">
+                Sentry Monitoring
+                <span class="skill-level-badge">Advanced</span>
+              </div>
+              <div class="skill-bar-track">
+                <div class="skill-bar-fill" data-width="60"></div>
+              </div>
+              <div class="skill-meta">
+                <span class="skill-projects">5+ Projekte</span
+                ><span class="skill-years">Error Tracking</span>
+              </div>
+            </div>
+            <div class="skill-card level-basic">
+              <div class="skill-name">
+                Python <span class="skill-level-badge">Basic</span>
+              </div>
+              <div class="skill-bar-track">
+                <div class="skill-bar-fill" data-width="20"></div>
+              </div>
+              <div class="skill-meta">
+                <span class="skill-projects">1 Projekt</span
+                ><span class="skill-years">BPMtoOSC</span>
+              </div>
+            </div>
+            <div class="skill-card level-advanced">
+              <div class="skill-name">
+                DSGVO / Cookie Consent
+                <span class="skill-level-badge">Advanced</span>
+              </div>
+              <div class="skill-bar-track">
+                <div class="skill-bar-fill" data-width="70"></div>
+              </div>
+              <div class="skill-meta">
+                <span class="skill-projects">10+ Projekte</span
+                ><span class="skill-years">Compliance</span>
+              </div>
+            </div>
+            <div class="skill-card level-advanced">
+              <div class="skill-name">
+                Migrations / CSV Import
+                <span class="skill-level-badge">Advanced</span>
+              </div>
+              <div class="skill-bar-track">
+                <div class="skill-bar-fill" data-width="68"></div>
+              </div>
+              <div class="skill-meta">
+                <span class="skill-projects">5+ Projekte</span
+                ><span class="skill-years">migrate_plus</span>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+      <!-- /categories -->
+
+      <!-- Domain Section -->
+      <h2 class="section-title">
+        Branchen-Erfahrung <span>nach Projektanzahl</span>
+      </h2>
+      <div class="domains">
+        <div class="domain-card">
+          <div class="domain-icon">🏢</div>
+          <div class="domain-name">B2B / Corporate</div>
+          <div class="domain-count">12 Projekte</div>
+        </div>
+        <div class="domain-card">
+          <div class="domain-icon">🏖️</div>
+          <div class="domain-name">Tourismus</div>
+          <div class="domain-count">8 Projekte</div>
+        </div>
+        <div class="domain-card">
+          <div class="domain-icon">🛠️</div>
+          <div class="domain-name">Dev Tools / Starter</div>
+          <div class="domain-count">6 Projekte</div>
+        </div>
+        <div class="domain-card">
+          <div class="domain-icon">🛒</div>
+          <div class="domain-name">E-Commerce</div>
+          <div class="domain-count">1 Projekt</div>
+        </div>
+        <div class="domain-card">
+          <div class="domain-icon">🏥</div>
+          <div class="domain-name">Gesundheit</div>
+          <div class="domain-count">2 Projekte</div>
+        </div>
+        <div class="domain-card">
+          <div class="domain-icon">🎬</div>
+          <div class="domain-name">Entertainment</div>
+          <div class="domain-count">2 Projekte</div>
+        </div>
+      </div>
+    </div>
+    <!-- /container -->
+
+    <script>
+      // Animate skill bars on scroll
+      const observer = new IntersectionObserver(
+        (entries) => {
+          entries.forEach((entry) => {
+            if (entry.isIntersecting) {
+              const bars = entry.target.querySelectorAll(".skill-bar-fill");
+              bars.forEach((bar) => {
+                const width = bar.dataset.width;
+                setTimeout(() => {
+                  bar.style.width = width + "%";
+                }, 100);
+              });
+              observer.unobserve(entry.target);
+            }
+          });
+        },
+        { threshold: 0.1 },
+      );
+
+      document
+        .querySelectorAll(".category")
+        .forEach((cat) => observer.observe(cat));
+
+      // Filter buttons
+      document.querySelectorAll(".filter-btn").forEach((btn) => {
+        btn.addEventListener("click", () => {
+          document
+            .querySelectorAll(".filter-btn")
+            .forEach((b) => b.classList.remove("active"));
+          btn.classList.add("active");
+          const filter = btn.dataset.filter;
+
+          document.querySelectorAll(".category").forEach((cat) => {
+            if (filter === "all") {
+              cat.classList.remove("hidden");
+            } else {
+              const tags = cat.dataset.tags || "";
+              cat.classList.toggle("hidden", !tags.includes(filter));
+            }
+          });
+
+          // Re-trigger bar animation for newly visible categories
+          document.querySelectorAll(".category:not(.hidden)").forEach((cat) => {
+            const bars = cat.querySelectorAll(".skill-bar-fill");
+            bars.forEach((bar) => {
+              bar.style.width = bar.dataset.width + "%";
+            });
+          });
+        });
+      });
+    </script>
+  </body>
+</html>
